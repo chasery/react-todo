@@ -23,6 +23,15 @@ class TodoList extends React.Component {
                 <div className="ui one cards">
                     {this.renderTodos()}
                 </div>
+                <div className="ui divider"></div>
+                <div style={{ textAlign: 'right' }}>
+                    <div className="ui animated fade button primary" tabIndex="0">
+                        <div className="visible content">Add Todo</div>
+                        <div className="hidden content">
+                            <i className="icon plus" style={{ margin: 0 }}></i>
+                        </div>
+                    </div>
+                </div>
             </div>
         );
     }
