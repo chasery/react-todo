@@ -22,7 +22,7 @@ class TodoList extends React.Component {
         });
     }
 
-    renderAdd() {
+    renderAddTodo() {
         return (
             <div style={{ textAlign: 'right' }}>
                 <div className="ui animated fade button primary" tabIndex="0" onClick={this.addTodo}>
@@ -39,6 +39,10 @@ class TodoList extends React.Component {
         this.setState(state => ({ modalIsOpen: !state.modalIsOpen, modalType: 'addTodo' }));
     }
 
+    closeModal = () => {
+        this.setState(state => ({ modalIsOpen: false, modalType: '' }));
+    }
+
     render() {
         return (
             <div className="ui container">
@@ -48,9 +52,9 @@ class TodoList extends React.Component {
                     {this.renderTodos()}
                 </div>
                 <div className="ui divider"></div>
-                {this.renderAdd()}
+                {this.renderAddTodo()}
                 {this.state.modalIsOpen && this.state.modalType === 'addTodo' && 
-                    <Modal title="Add Todo" content="Add Todo Test" />
+                    <Modal title="Add Todo" content="Add Todo Test" closeModal={() => this.closeModal} />
                 }
             </div>
         );
