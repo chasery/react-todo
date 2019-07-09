@@ -6,8 +6,7 @@ const Modal = props => {
         <div className="ui dimmer modals visible active" onClick={props.closeModal()}>
             <div className="ui standard modal visible active" onClick={(e) => e.stopPropagation()}>
                 <i className="floated right icon close" onClick={props.closeModal()} />
-                <div className="header">{props.title}</div>
-                <div className="content">{props.content}</div>
+                {props.children}
             </div>
         </div>,
         document.querySelector('#modal')

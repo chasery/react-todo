@@ -1,15 +1,19 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { fetchTodos } from '../actions';
+import { fetchTodos, createTodo } from '../actions';
 import Todo from './Todo';
 import Modal from './Modal';
+import TodoForm from './TodoForm';
 
 class TodoList extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = { modalIsOpen: false, modalType: '' };
+        let modalType = '';
+        let modalIsOpen = false;
+
+        this.state = { modalIsOpen, modalType };
     }
 
     componentDidMount() {
@@ -35,12 +39,16 @@ class TodoList extends React.Component {
         );
     }
 
+    onSubmit = formValues => {
+        this.props.createTodo(formValues, this.closeModal());
+    }
+
     addTodo = () => {
         this.setState(state => ({ modalIsOpen: !state.modalIsOpen, modalType: 'addTodo' }));
     }
 
     closeModal = () => {
-        this.setState(state => ({ modalIsOpen: false, modalType: '' }));
+        this.setState(() => ({ modalIsOpen: false, modalType: '' }));
     }
 
     render() {
@@ -54,7 +62,12 @@ class TodoList extends React.Component {
                 <div className="ui divider"></div>
                 {this.renderAddTodo()}
                 {this.state.modalIsOpen && this.state.modalType === 'addTodo' && 
-                    <Modal title="Add Todo" content="Add Todo Test" closeModal={() => this.closeModal} />
+                    <Modal closeModal={() => this.closeModal}>
+                        <div className="header">Add Todo</div>
+                        <div className="content">
+                            <TodoForm onSubmit={this.onSubmit} />
+                        </div>
+                    </Modal>
                 }
             </div>
         );
@@ -67,4 +80,4 @@ const mapStateToProps = (state) => {
     }
 };
 
-export default connect(mapStateToProps, { fetchTodos })(TodoList);
+export default connect(mapStateToProps, { fetchTodos, createTodo })(TodoList);
