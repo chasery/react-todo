@@ -1,10 +1,10 @@
 import todos from './apis/todos';
 import { FETCH_TODOS,
     // FETCH_TODO,
-    CREATE_TODO
+    CREATE_TODO,
     // EDIT_TODO,
     // COMPLETE_TODO,
-    // DELETE_TODO
+    DELETE_TODO
 } from './types';
 
 export const fetchTodos = () => async dispatch => {
@@ -31,6 +31,8 @@ export const createTodo = formValues => async dispatch => {
 //     dispatch({ type: COMPLETE_TODO, payload: null });
 // }
 
-// export const deleteTodo = (id) => {
-//     dispatch({ type: DELETE_TODO, payload: null });
-// }
+export const deleteTodo = (id) => async dispatch => {
+    await todos.delete(`/todos/${id}`);
+    
+    dispatch({ type: DELETE_TODO, payload: id });
+}
