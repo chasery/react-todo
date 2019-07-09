@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { fetchTodos, createTodo } from '../actions';
+import { fetchTodos, createTodo, deleteTodo } from '../actions';
 import Todo from './Todo';
 import Modal from './Modal';
 import TodoForm from './TodoForm';
@@ -22,7 +22,7 @@ class TodoList extends React.Component {
 
     renderTodos() {
         return this.props.todos.map(todo => {
-            return <Todo key={todo.id} title={todo.title} description={todo.description} />;
+            return <Todo key={todo.id} id={todo.id} title={todo.title} description={todo.description} onDelete={this.onDelete} />;
         });
     }
 
@@ -41,6 +41,9 @@ class TodoList extends React.Component {
 
     onSubmit = formValues => {
         this.props.createTodo(formValues, this.closeModal());
+    }
+    onDelete = id => {
+        this.props.deleteTodo(id);
     }
 
     addTodo = () => {
@@ -80,4 +83,10 @@ const mapStateToProps = (state) => {
     }
 };
 
-export default connect(mapStateToProps, { fetchTodos, createTodo })(TodoList);
+export default connect(
+    mapStateToProps, { 
+        fetchTodos, 
+        createTodo, 
+        deleteTodo 
+    }
+)(TodoList);
