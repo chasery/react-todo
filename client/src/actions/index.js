@@ -1,7 +1,7 @@
 import todos from './apis/todos';
-import { FETCH_TODOS
+import { FETCH_TODOS,
     // FETCH_TODO,
-    // CREATE_TODO,
+    CREATE_TODO
     // EDIT_TODO,
     // COMPLETE_TODO,
     // DELETE_TODO
@@ -16,10 +16,12 @@ export const fetchTodos = () => async dispatch => {
 //     dispatch({ type: FETCH_TODO, payload: null });
 // }
 
-// // Modifying Todos
-// export const createTodo = (formValues) => {
-//     dispatch({ type: CREATE_TODO, payload: null });
-// };
+// Modifying Todos
+export const createTodo = formValues => async dispatch => {
+    const response = await todos.post('/todos', { ...formValues });
+
+    dispatch({ type: CREATE_TODO, payload: response.data });
+};
 
 // export const editTodo = (id, formValues) => {
 //     dispatch({ type: EDIT_TODO, payload: null });
