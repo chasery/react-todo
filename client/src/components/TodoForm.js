@@ -1,7 +1,15 @@
 import React from 'react';
 import { Field, reduxForm } from 'redux-form';
+import { connect } from 'react-redux';
+import { fetchTodo } from '../actions';
+
 
 class TodoForm extends React.Component {
+    componentDidMount() {
+        if (this.props.editTodoId) {
+            this.props.fetchTodo(this.props.editTodoId);
+        }
+    }
     renderError ({ error, touched }) {
         if (touched && error) {
             return (
@@ -24,7 +32,12 @@ class TodoForm extends React.Component {
     }
 
     onSubmit = formValues => {
-        this.props.onSubmit(formValues);
+        if (this.props.editTodoId) {
+            this.props.onSubmit(formValues, this.props.editTodoId);
+        }
+        else {
+            this.props.onSubmit(formValues);
+        }
     }
 
     render() {
@@ -32,7 +45,10 @@ class TodoForm extends React.Component {
             <form className="ui form error" onSubmit={this.props.handleSubmit(this.onSubmit)}>
                 <Field name="title" component={this.renderInput} label="Todo Title" />
                 <Field name="description" component={this.renderInput} label="Todo Description" />
-                <button className="ui button primary">Submit</button>
+                <div style={{ textAlign: 'right' }}>
+                    <button type="button" className="ui button" onClick={this.props.closeModal()}>Cancel</button>
+                    <button type="submit" className="ui button primary">{this.props.editTodoId ? 'Edit Todo' : 'Add Todo'}</button>
+                </div>
             </form>
         );
     };
@@ -51,9 +67,19 @@ const validate = (formValues) => {
 
     return errors;
 };
+const mapStateToProps = (state, ownProps) => {
+    const idEval = ownProps.editTodoId ? state.todos[ownProps.editTodoId] : null;
 
-export default reduxForm({
-    form: 'todoForm',
-    validate,
-    enableReinitialize: true
-})(TodoForm);
+    return { 
+        todo: idEval,
+        initialValues: idEval
+    };
+}
+
+export default connect(mapStateToProps, { fetchTodo })(
+    reduxForm({
+        form: 'todoForm',
+        validate,
+        enableReinitialize: true
+    })(TodoForm)
+);

@@ -1,6 +1,6 @@
 import todos from './apis/todos';
 import { FETCH_TODOS,
-    SELECT_TODO,
+    FETCH_TODO,
     CREATE_TODO,
     EDIT_TODO,
     DELETE_TODO
@@ -11,10 +11,10 @@ export const fetchTodos = () => async dispatch => {
 
     dispatch({ type: FETCH_TODOS, payload: response.data });
 };
-export const selectTodo = (id) => async dispatch => {
+export const fetchTodo = (id) => async dispatch => {
     const response = await todos.get(`/todos/${id}`);
 
-    dispatch({ type: SELECT_TODO, payload: response.data });
+    dispatch({ type: FETCH_TODO, payload: response.data });
 }
 
 // Modifying Todos
