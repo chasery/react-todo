@@ -30,8 +30,8 @@ class TodoForm extends React.Component {
     render() {
         return (
             <form className="ui form error" onSubmit={this.props.handleSubmit(this.onSubmit)}>
-                <Field name="title" component={this.renderInput} label="Stream Title" />
-                <Field name="description" component={this.renderInput} label="Stream Description" />
+                <Field name="title" component={this.renderInput} label="Todo Title" />
+                <Field name="description" component={this.renderInput} label="Todo Description" />
                 <button className="ui button primary">Submit</button>
             </form>
         );
@@ -53,6 +53,7 @@ const validate = (formValues) => {
 };
 
 export default reduxForm({
-    form: 'streamForm',
-    validate
+    form: 'todoForm',
+    validate,
+    enableReinitialize: true
 })(TodoForm);

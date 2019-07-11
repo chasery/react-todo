@@ -1,7 +1,8 @@
+import _ from 'lodash';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { fetchTodos, createTodo, deleteTodo } from '../actions';
+import { fetchTodos, selectTodo, createTodo, editTodo, deleteTodo } from '../actions';
 import Todo from './Todo';
 import Modal from './Modal';
 import TodoForm from './TodoForm';
@@ -12,8 +13,9 @@ class TodoList extends React.Component {
 
         let modalType = '';
         let modalIsOpen = false;
+        let selectedTodo = null;
 
-        this.state = { modalIsOpen, modalType };
+        this.state = { modalIsOpen, modalType, selectedTodo };
     }
 
     componentDidMount() {
@@ -22,7 +24,14 @@ class TodoList extends React.Component {
 
     renderTodos() {
         return this.props.todos.map(todo => {
-            return <Todo key={todo.id} id={todo.id} title={todo.title} description={todo.description} onDelete={this.onDelete} />;
+            return <Todo 
+                key={todo.id} 
+                id={todo.id} 
+                title={todo.title} 
+                description={todo.description} 
+                onDelete={this.onDelete} 
+                editTodo={this.editTodo} 
+            />;
         });
     }
 
@@ -40,6 +49,7 @@ class TodoList extends React.Component {
     }
 
     onSubmit = formValues => {
+
         this.props.createTodo(formValues, this.closeModal());
     }
     onDelete = id => {
@@ -48,6 +58,10 @@ class TodoList extends React.Component {
 
     addTodo = () => {
         this.setState(state => ({ modalIsOpen: !state.modalIsOpen, modalType: 'addTodo' }));
+    }
+    editTodo = id => {
+        this.props.selectTodo(id);
+        this.setState(state => ({ modalIsOpen: !state.modalIsOpen, modalType: 'editTodo' }));
     }
 
     closeModal = () => {
@@ -68,7 +82,15 @@ class TodoList extends React.Component {
                     <Modal closeModal={() => this.closeModal}>
                         <div className="header">Add Todo</div>
                         <div className="content">
-                            <TodoForm onSubmit={this.onSubmit} />
+                            <TodoForm formType="addForm" onSubmit={this.onSubmit} />
+                        </div>
+                    </Modal>
+                }
+                {this.state.modalIsOpen && this.state.modalType === 'editTodo' && 
+                    <Modal closeModal={() => this.closeModal}>
+                        <div className="header">Edit Todo</div>
+                        <div className="content">
+                            <TodoForm formType="editForm" onSubmit={this.onSubmit} initialValues={_.pick(this.props.todo, 'title', 'description')} />
                         </div>
                     </Modal>
                 }
@@ -79,14 +101,17 @@ class TodoList extends React.Component {
 
 const mapStateToProps = (state) => {
     return {
-        todos: Object.values(state.todos)
+        todos: Object.values(state.todos),
+        todo: state.todo
     }
 };
 
 export default connect(
     mapStateToProps, { 
         fetchTodos, 
+        selectTodo, 
         createTodo, 
+        editTodo, 
         deleteTodo 
     }
 )(TodoList);
