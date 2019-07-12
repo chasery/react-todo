@@ -15,5 +15,12 @@
       "title": "Feed Lucy and Atticus",
       "description": "Make sure that our fur babies have food and water!"
     }
+  ],
+  "completed": [
+    {
+      "id": 4,
+      "title": "Do the dishes",
+      "description": "Load, run, and empty the dishwasher."
+    }
   ]
 }

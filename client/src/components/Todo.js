@@ -1,7 +1,7 @@
 import React from 'react';
 
 const Todo = (props) => {
-    const { id, title, description, onDelete, editTodo } = props;
+    const { id, title, description, onDelete, editTodo, onComplete } = props;
 
     return (
         <div className="ui raised card">
@@ -21,6 +21,12 @@ const Todo = (props) => {
                         <div className="visible content">Edit</div>
                         <div className="hidden content">
                             <i className="icon edit outline" style={{ margin: 0 }}></i>
+                        </div>
+                    </div>
+                    <div className="ui animated fade tiny button basic green" tabIndex="0" onClick={() => onComplete(id)}>
+                        <div className="visible content">Complete</div>
+                        <div className="hidden content">
+                            <i className="icon check" style={{ margin: 0 }}></i>
                         </div>
                     </div>
                 </div>

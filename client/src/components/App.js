@@ -10,5 +10,3 @@ class App extends React.Component {
 }
 
 export default App;
-
-// Create an ability to edit a todo

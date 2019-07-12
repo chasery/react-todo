@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { fetchTodos, createTodo, editTodo, deleteTodo } from '../actions';
+import { fetchTodos, fetchCompleted, createTodo, editTodo, deleteTodo, completeTodo } from '../actions';
 import Todo from './Todo';
 import Modal from './Modal';
 import TodoForm from './TodoForm';
@@ -19,6 +19,7 @@ class TodoList extends React.Component {
 
     componentDidMount() {
         this.props.fetchTodos();
+        this.props.fetchCompleted();
     }
 
     renderTodos() {
@@ -29,7 +30,8 @@ class TodoList extends React.Component {
                 title={todo.title} 
                 description={todo.description} 
                 onDelete={this.onDelete} 
-                editTodo={this.editTodo} 
+                editTodo={this.editTodo}
+                onComplete={this.onComplete}
             />;
         });
     }
@@ -59,6 +61,9 @@ class TodoList extends React.Component {
     onDelete = id => {
         this.props.deleteTodo(id);
     }
+    onComplete = id => {
+        this.props.completeTodo(id);
+    }
 
     // Local state modal management
     addTodo = () => {
@@ -72,7 +77,6 @@ class TodoList extends React.Component {
     }
 
     render() {
-        console.log(this.props);
         return (
             <div className="ui container">
                 <h2 className="ui header">React-Redux Todo List</h2>
@@ -112,8 +116,10 @@ const mapStateToProps = (state) => {
 export default connect(
     mapStateToProps, { 
         fetchTodos, 
+        fetchCompleted,
         createTodo, 
         editTodo, 
-        deleteTodo 
+        deleteTodo,
+        completeTodo 
     }
 )(TodoList);
