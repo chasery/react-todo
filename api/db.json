@@ -2,25 +2,21 @@
   "todos": [
     {
       "id": 1,
+      "complete": false,
       "title": "Do the dishes",
       "description": "Load, run, and empty the dishwasher."
     },
     {
       "id": 2,
+      "complete": true,
       "title": "Run DJ Roomba",
       "description": "Empty the bin once DJ Roomba is full."
     },
     {
       "id": 3,
+      "complete": true,
       "title": "Feed Lucy and Atticus",
       "description": "Make sure that our fur babies have food and water!"
-    }
-  ],
-  "completed": [
-    {
-      "id": 4,
-      "title": "Do the dishes",
-      "description": "Load, run, and empty the dishwasher."
     }
   ]
 }

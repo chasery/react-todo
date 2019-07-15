@@ -1,54 +1,51 @@
-import todos from './apis/todos';
-import { FETCH_TODOS,
-    FETCH_COMPLETED,
-    FETCH_TODO,
-    CREATE_TODO,
-    EDIT_TODO,
-    DELETE_TODO,
-    COMPLETE_TODO
-} from './types';
+import todos from "./apis/todos";
+import {
+  FETCH_TODOS,
+  FETCH_COMPLETED,
+  FETCH_TODO,
+  CREATE_TODO,
+  EDIT_TODO,
+  COMPLETE_TODO,
+  DELETE_TODO
+} from "./types";
 
 export const fetchTodos = () => async dispatch => {
-    const response = await todos.get('/todos');
+  const response = await todos.get("/todos");
 
-    dispatch({ type: FETCH_TODOS, payload: response.data });
+  dispatch({ type: FETCH_TODOS, payload: response.data });
 };
-export const fetchTodo = (id) => async dispatch => {
-    const response = await todos.get(`/todos/${id}`);
+export const fetchTodo = id => async dispatch => {
+  const response = await todos.get(`/todos/${id}`);
 
-    dispatch({ type: FETCH_TODO, payload: response.data });
+  dispatch({ type: FETCH_TODO, payload: response.data });
 };
 export const fetchCompleted = () => async dispatch => {
-    const response = await todos.get('/completed');
+  const response = await todos.get("/completed");
 
-    dispatch({ type: FETCH_COMPLETED, payload: response.data });
+  dispatch({ type: FETCH_COMPLETED, payload: response.data });
 };
 
 // Modifying Todos
 export const createTodo = formValues => async dispatch => {
-    const response = await todos.post('/todos', { ...formValues });
+  const response = await todos.post("/todos", { ...formValues });
 
-    dispatch({ type: CREATE_TODO, payload: response.data });
-}
+  dispatch({ type: CREATE_TODO, payload: response.data });
+};
 
 export const editTodo = (id, formValues) => async dispatch => {
-    const response = await todos.patch(`/todos/${id}`, formValues);
+  const response = await todos.patch(`/todos/${id}`, formValues);
 
-    dispatch({ type: EDIT_TODO, payload: response.data });
-}
+  dispatch({ type: EDIT_TODO, payload: response.data });
+};
 
-export const deleteTodo = (id) => async dispatch => {
-    await todos.delete(`/todos/${id}`);
-    
-    dispatch({ type: DELETE_TODO, payload: id });
-}
+export const completeTodo = id => async dispatch => {
+  const response = await todos.patch(`/todos/${id}`, { complete: true });
 
-export const completeTodo = (id) => async dispatch => {
-    const todoResponse = await todos.get(`/todos/${id}`);
-    const postResponse = await todos.post('/completed', { ...todoResponse.data });
-    await todos.delete(`/todos/${id}`);
+  dispatch({ type: COMPLETE_TODO, payload: response.data });
+};
 
-    dispatch({ type: FETCH_TODO, payload: todoResponse.data })
-    dispatch({ type: COMPLETE_TODO, payload: postResponse.data })
-    dispatch({ type: DELETE_TODO, payload: id })
+export const deleteTodo = id => async dispatch => {
+  await todos.delete(`/todos/${id}`);
+
+  dispatch({ type: DELETE_TODO, payload: id });
 };
