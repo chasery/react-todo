@@ -1,16 +1,9 @@
-import React from 'react';
-import { Field, reduxForm } from 'redux-form';
-import { connect } from 'react-redux';
-import { fetchTodo } from '../actions';
-
+import React from "react";
+import { Field, reduxForm } from "redux-form";
+import { connect } from "react-redux";
 
 class TodoForm extends React.Component {
-    componentDidMount() {
-        if (this.props.editTodoId) {
-            this.props.fetchTodo(this.props.editTodoId);
-        }
-    }
-    renderError ({ error, touched }) {
+    renderError({ error, touched }) {
         if (touched && error) {
             return (
                 <div className="ui error message">
@@ -20,8 +13,8 @@ class TodoForm extends React.Component {
         }
     }
     renderInput = ({ input, label, meta }) => {
-        const className= `field ${meta.error && meta.touched ? 'error': ''}`;
-        
+        const className = `field ${meta.error && meta.touched ? "error" : ""}`;
+
         return (
             <div className={className}>
                 <label>{label}</label>
@@ -29,56 +22,74 @@ class TodoForm extends React.Component {
                 {this.renderError(meta)}
             </div>
         );
-    }
+    };
 
     onSubmit = formValues => {
         if (this.props.editTodoId) {
             this.props.onSubmit(formValues, this.props.editTodoId);
-        }
-        else {
+        } else {
             this.props.onSubmit(formValues);
         }
-    }
+    };
 
     render() {
         return (
-            <form className="ui form error" onSubmit={this.props.handleSubmit(this.onSubmit)}>
-                <Field name="title" component={this.renderInput} label="Todo Title" />
-                <Field name="description" component={this.renderInput} label="Todo Description" />
-                <div style={{ textAlign: 'right' }}>
-                    <button type="button" className="ui button" onClick={this.props.closeModal()}>Cancel</button>
-                    <button type="submit" className="ui button primary">{this.props.editTodoId ? 'Edit Todo' : 'Add Todo'}</button>
+            <form
+                className="ui form error"
+                onSubmit={this.props.handleSubmit(this.onSubmit)}
+            >
+                <Field
+                    name="title"
+                    component={this.renderInput}
+                    label="Todo Title"
+                />
+                <Field
+                    name="description"
+                    component={this.renderInput}
+                    label="Todo Description"
+                />
+                <div style={{ textAlign: "right" }}>
+                    <button
+                        type="button"
+                        className="ui button"
+                        onClick={this.props.closeModal()}
+                    >
+                        Cancel
+                    </button>
+                    <button type="submit" className="ui button primary">
+                        {this.props.editTodoId ? "Edit Todo" : "Add Todo"}
+                    </button>
                 </div>
             </form>
         );
-    };
-};
+    }
+}
 
-const validate = (formValues) => {
+const validate = formValues => {
     const errors = {};
 
     if (!formValues.title) {
-        errors.title = 'Your todo requires a title.';
+        errors.title = "Your todo requires a title.";
     }
 
     if (!formValues.description) {
-        errors.description = 'Your todo requires a description.';
+        errors.description = "Your todo requires a description.";
     }
 
     return errors;
 };
 const mapStateToProps = (state, ownProps) => {
-    const idEval = ownProps.editTodoId ? state.todos[ownProps.editTodoId] : null;
-
-    return { 
-        todo: idEval,
-        initialValues: idEval
+    return {
+        initialValues: state.todos.find(todo => todo.id === ownProps.editTodoId)
     };
-}
+};
 
-export default connect(mapStateToProps, { fetchTodo })(
+export default connect(
+    mapStateToProps,
+    null
+)(
     reduxForm({
-        form: 'todoForm',
+        form: "todoForm",
         validate,
         enableReinitialize: true
     })(TodoForm)

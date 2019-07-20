@@ -1,46 +1,65 @@
-import React from 'react';
-import { connect } from 'react-redux';
+import React, { Fragment } from "react";
+import { connect } from "react-redux";
 
-import { fetchTodos, createTodo, editTodo, deleteTodo } from '../actions';
-import Todo from './Todo';
-import Modal from './Modal';
-import TodoForm from './TodoForm';
+import {
+    fetchTodos,
+    createTodo,
+    editTodo,
+    completeTodo,
+    deleteTodo
+} from "../actions";
+import Todo from "./Todo";
+import Modal from "./Modal";
+import TodoForm from "./TodoForm";
+import { filterList } from "../selectors";
 
 class TodoList extends React.Component {
     constructor(props) {
         super(props);
 
-        let modalType = '';
+        let modalType = "";
         let modalIsOpen = false;
         let editTodoId = null;
+        let listData = [];
 
-        this.state = { modalIsOpen, modalType, editTodoId };
+        this.state = { modalIsOpen, modalType, editTodoId, listData };
     }
 
     componentDidMount() {
         this.props.fetchTodos();
     }
 
-    renderTodos() {
-        return this.props.todos.map(todo => {
-            return <Todo 
-                key={todo.id} 
-                id={todo.id} 
-                title={todo.title} 
-                description={todo.description} 
-                onDelete={this.onDelete} 
-                editTodo={this.editTodo} 
-            />;
-        });
+    renderList(listData) {
+        if (this.props.todos) {
+            return listData.map((todo, index) => {
+                return (
+                    <Todo
+                        key={index}
+                        id={todo.id}
+                        currentStatus={todo.currentStatus}
+                        title={todo.title}
+                        description={todo.description}
+                        onDelete={this.onDelete}
+                        editTodo={this.editTodo}
+                        onComplete={this.onComplete}
+                    />
+                );
+            });
+        }
+        return <div>Loading...</div>;
     }
 
     renderAddTodo() {
         return (
-            <div style={{ textAlign: 'right' }}>
-                <div className="ui animated fade button primary" tabIndex="0" onClick={this.addTodo}>
+            <div style={{ float: "right" }}>
+                <div
+                    className="ui animated fade button primary"
+                    tabIndex="0"
+                    onClick={this.addTodo}
+                >
                     <div className="visible content">Add Todo</div>
                     <div className="hidden content">
-                        <i className="icon plus" style={{ margin: 0 }}></i>
+                        <i className="icon plus" style={{ margin: 0 }} />
                     </div>
                 </div>
             </div>
@@ -55,65 +74,83 @@ class TodoList extends React.Component {
             this.props.createTodo(formValues);
         }
         this.closeModal();
-    }
+    };
     onDelete = id => {
         this.props.deleteTodo(id);
-    }
+    };
+    onComplete = id => {
+        this.props.completeTodo(id);
+    };
 
     // Local state modal management
     addTodo = () => {
-        this.setState(state => ({ modalIsOpen: !state.modalIsOpen, modalType: 'addTodo' }));
-    }
+        this.setState(state => ({
+            modalIsOpen: !state.modalIsOpen,
+            modalType: "addTodo"
+        }));
+    };
     editTodo = id => {
-        this.setState(state => ({ modalIsOpen: !state.modalIsOpen, modalType: 'editTodo', editTodoId: id }));
-    }
+        this.setState(state => ({
+            modalIsOpen: !state.modalIsOpen,
+            modalType: "editTodo",
+            editTodoId: id
+        }));
+    };
     closeModal = () => {
-        this.setState(() => ({ modalIsOpen: false, modalType: '' }));
-    }
+        this.setState(() => ({ modalIsOpen: false, modalType: "" }));
+    };
 
     render() {
-        console.log(this.props);
         return (
-            <div className="ui container">
-                <h2 className="ui header">React-Redux Todo List</h2>
-                <div className="ui divider"></div>
-                <div className="ui one cards">
-                    {this.renderTodos()}
-                </div>
-                <div className="ui divider"></div>
+            <Fragment>
                 {this.renderAddTodo()}
-                {this.state.modalIsOpen && this.state.modalType === 'addTodo' && 
+                <h3 className="ui header">Todos</h3>
+                <div className="ui divider" />
+                <div className="ui one cards">
+                    {this.renderList(this.props.todos)}
+                </div>
+
+                {this.state.modalIsOpen && this.state.modalType === "addTodo" && (
                     <Modal closeModal={() => this.closeModal}>
                         <div className="header">Add Todo</div>
                         <div className="content">
-                            <TodoForm onSubmit={this.onSubmit} closeModal={() => this.closeModal} />
+                            <TodoForm
+                                onSubmit={this.onSubmit}
+                                closeModal={() => this.closeModal}
+                            />
                         </div>
                     </Modal>
-                }
-                {this.state.modalIsOpen && this.state.modalType === 'editTodo' && 
+                )}
+                {this.state.modalIsOpen && this.state.modalType === "editTodo" && (
                     <Modal closeModal={() => this.closeModal}>
                         <div className="header">Edit Todo</div>
                         <div className="content">
-                            <TodoForm onSubmit={this.onSubmit} closeModal={() => this.closeModal} editTodoId={this.state.editTodoId} />
+                            <TodoForm
+                                onSubmit={this.onSubmit}
+                                closeModal={() => this.closeModal}
+                                editTodoId={this.state.editTodoId}
+                            />
                         </div>
                     </Modal>
-                }
-            </div>
+                )}
+            </Fragment>
         );
     }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
     return {
-        todos: Object.values(state.todos)
-    }
+        todos: filterList(state.todos)
+    };
 };
 
 export default connect(
-    mapStateToProps, { 
-        fetchTodos, 
-        createTodo, 
-        editTodo, 
-        deleteTodo 
+    mapStateToProps,
+    {
+        fetchTodos,
+        createTodo,
+        editTodo,
+        completeTodo,
+        deleteTodo
     }
 )(TodoList);

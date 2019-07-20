@@ -1,19 +1,28 @@
 {
-  "todos": [
-    {
-      "id": 1,
-      "title": "Do the dishes",
-      "description": "Load, run, and empty the dishwasher."
-    },
-    {
-      "id": 2,
-      "title": "Run DJ Roomba",
-      "description": "Empty the bin once DJ Roomba is full."
-    },
-    {
-      "id": 3,
-      "title": "Feed Lucy and Atticus",
-      "description": "Make sure that our fur babies have food and water!"
-    }
-  ]
+    "todos": [
+        {
+            "title": "Test Edit",
+            "description": "Test Edit",
+            "currentStatus": "open",
+            "id": 1
+        },
+        {
+            "title": "Test Delete",
+            "description": "Test Delete",
+            "currentStatus": "deleted",
+            "id": 2
+        },
+        {
+            "title": "Test Complete",
+            "description": "Test Complete",
+            "currentStatus": "completed",
+            "id": 3
+        },
+        {
+            "title": "Test Add",
+            "description": "Test Add",
+            "currentStatus": "open",
+            "id": 4
+        }
+    ]
 }
